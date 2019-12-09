@@ -94,11 +94,8 @@ def acknowledgments(conn):
         try:
             rcvdAck=conn.recv(4096)
             rcvdAck=rcvdAck.decode('utf-8')
-            print(int(rcvdAck[0:32],2))
-            print(segments_sent)
             if int(rcvdAck[0:32],2) in segments_sent:
                 segments_sent.remove(int(rcvdAck[0:32],2))
-            print(segments_sent)
         except socket.timeout:
             print("Timeout, sequence number = ",segments_sent[0])
             sqnSent='{:032b}'.format(segments_sent[0])
@@ -120,5 +117,3 @@ sendThread=threading.Thread(target=rdt_send, args=(clientSock,))
 ackThread=threading.Thread(target=acknowledgments, args=(clientSock,))
 sendThread.start()
 ackThread.start()
-sendThread.join(timeout=0.5)
-ackThread.join(timeout=0.5)

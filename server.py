@@ -38,7 +38,7 @@ sqnNum=0
 ackPkt=21845
 zeroPkt=0
 dataPkts={}
-# f=open(fileName, 'w')
+f=open(fileName, 'w')
 
 while True:
     data, addr=serverSock.recvfrom(2048)
@@ -50,7 +50,6 @@ while True:
     sqnRcvd=int(data[0:32],2)
     checksumRcvd=int(data[32:48],2)
     payload=data[64:]
-    print(type(payload.decode('utf-8')))
     if checksum(payload, len(payload))!=checksumRcvd:
         continue
     elif round(random.random(),2) <= pktLossProb:
@@ -65,7 +64,7 @@ while True:
         serverSock.sendto(dataPkt.encode('utf-8'),addr)
         dataPkts[sqnNum]=payload.decode('utf-8')
 
-# for key,value in data.items():
-#     f.write(value)
+for key,value in data.items():
+    f.write(value)
 serverSock.close()
-# f.close()
+f.close()
