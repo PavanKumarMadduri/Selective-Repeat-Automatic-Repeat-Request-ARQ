@@ -34,7 +34,6 @@ def checksum(segment, length):
         y = ((x + y) & 0xffff) + ((x + y) >> 16)
     return ~y & 0xffff
 
-sqnNum=0
 ackPkt=21845
 zeroPkt=0
 dataPkts={}
@@ -54,15 +53,10 @@ while True:
         continue
     elif round(random.random(),2) <= pktLossProb:
         print("Packet loss, sequence number = ",sqnRcvd)
-    elif sqnRcvd == sqnNum:
-        dataPkt='{:032b}'.format(sqnNum)+'{:016b}'.format(zeroPkt)+'{:016b}'.format(ackPkt)
-        serverSock.sendto(dataPkt.encode('utf-8'),addr)
-        dataPkts[sqnNum]=payload.decode('utf-8')
-        sqnNum+=1
-    elif sqnRcvd > sqnNum:
+    else:
         dataPkt='{:032b}'.format(sqnRcvd)+'{:016b}'.format(zeroPkt)+'{:016b}'.format(ackPkt)
         serverSock.sendto(dataPkt.encode('utf-8'),addr)
-        dataPkts[sqnNum]=payload.decode('utf-8')
+        dataPkts[sqnRcvd]=payload.decode('utf-8')
 
 for key,value in data.items():
     f.write(value)
