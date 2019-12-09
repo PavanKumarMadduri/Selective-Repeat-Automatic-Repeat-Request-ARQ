@@ -90,6 +90,7 @@ def rdt_send(clientSock):
 
 
 def acknowledgments(conn):
+    count=0
     global buffer,sqnNum,flag,endTime,segments_sent
     while flag:
         try:
@@ -98,7 +99,7 @@ def acknowledgments(conn):
             rcvdAck=int(rcvdAck[0:32],2)
             if rcvdAck<sqnNum:
                 segments_sent.remove(rcvdAck)
-            # print(segments_sent,rcvdAck )
+                count+=1
         except socket.timeout:
             for i in segments_sent:
                 print("Timeout, sequence number = ",i)
@@ -109,7 +110,7 @@ def acknowledgments(conn):
 
         if len(segments_sent)==0:
             buffer=windowSize
-        if sqnNum==len(segments):
+        if count==len(segments):
             flag=0
             clientSock.sendto("Done".encode('utf-8'), server)
             print("File has been sent")

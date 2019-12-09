@@ -58,7 +58,7 @@ while True:
         serverSock.sendto(dataPkt.encode('utf-8'),addr)
         dataPkts[sqnRcvd]=payload.decode('utf-8')
 
-for key,value in data.items():
+for key,value in dataPkts.items():
     f.write(value)
 serverSock.close()
 f.close()
