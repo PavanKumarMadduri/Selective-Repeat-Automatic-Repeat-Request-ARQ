@@ -104,7 +104,7 @@ def acknowledgments(conn):
                 print("Timeout, sequence number = ",i)
                 sqnSent='{:032b}'.format(i)
                 checksumSent=checksum(segments[i],len(segments[i]))
-                segmentSent=sqnSent.encode('utf-8')+checksumSent.encode('utf-8')+dataPkt.encode('utf-8')+segments[sqnNum]
+                segmentSent=sqnSent.encode('utf-8')+checksumSent.encode('utf-8')+dataPkt.encode('utf-8')+segments[i]
                 clientSock.sendto(segmentSent, server)
 
         if len(segments_sent)==0:
