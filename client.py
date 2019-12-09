@@ -98,6 +98,7 @@ def acknowledgments(conn):
             rcvdAck=int(rcvdAck[0:32],2)
             if rcvdAck<sqnNum:
                 segments_sent.remove(rcvdAck)
+            print(segments_sent,rcvdAck )
         except socket.timeout:
             for i in segments_sent:
                 print("Timeout, sequence number = ",i)
