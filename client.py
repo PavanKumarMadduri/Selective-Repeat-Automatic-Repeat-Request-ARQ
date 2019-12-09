@@ -66,7 +66,7 @@ def checksum(segment, length):
 
 dataPkt='0101010101010101'
 buffer=windowSize
-sqnNum=prevSqn=0
+sqnNum=0
 flag=1
 segments_sent=[]
 
@@ -90,7 +90,7 @@ def rdt_send(clientSock):
 
 
 def acknowledgments(conn):
-    global buffer,sqnNum,prevSqn,flag,endTime,segments_sent
+    global buffer,sqnNum,flag,endTime,segments_sent
     while flag:
         try:
             rcvdAck=conn.recv(4096)
@@ -101,15 +101,14 @@ def acknowledgments(conn):
         except socket.timeout:
             for i in segments_sent:
                 print("Timeout, sequence number = ",i)
-        for i in segments_sent:
-            sqnSent='{:032b}'.format(sqnNum)
-            checksumSent=checksum(segments[sqnNum],len(segments[sqnNum]))
-            segmentSent=sqnSent.encode('utf-8')+checksumSent.encode('utf-8')+dataPkt.encode('utf-8')+segments[sqnNum]
-            clientSock.sendto(segmentSent, server)
+                sqnSent='{:032b}'.format(i)
+                checksumSent=checksum(segments[i],len(segments[i]))
+                segmentSent=sqnSent.encode('utf-8')+checksumSent.encode('utf-8')+dataPkt.encode('utf-8')+segments[sqnNum]
+                clientSock.sendto(segmentSent, server)
 
         if len(segments_sent)==0:
             buffer=windowSize
-        if prevSqn==len(segments):
+        if sqnNum==len(segments):
             flag=0
             clientSock.sendto("Done".encode('utf-8'), server)
             print("File has been sent")
